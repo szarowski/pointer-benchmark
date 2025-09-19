@@ -1,7 +1,15 @@
 # Pointer Benchmark Test
 
 This benchmark shows the difference in execution of simple update functions with arguments passed by value 
-or passed by reference in Golang.
+or passed by reference in Golang. 
+
+The arguments are structs with arrays of ints (or pointers to them) and slices of the same nested structs (or pointers to them).
+
+There are several criteria for tests:
+- Recursion: 1,2,3 - how many times are nested structs nested
+- Nested Struct Count: 1,4,16 - a size of the slice (or a pointer to the slice) of structs in a parent struct
+- Array size: 1, 10, 100, 1000, 10000 - a size of the array (or a pointer to the array) of ints in a parent struct
+- Call count: 1,4,16 - how many times is the update method (byValue or byPointer) called recursively 
 
 ## Run
 
@@ -11,23 +19,283 @@ go test -bench=BenchmarkArrayStructs
 
 ## Results
 
-Results of running the benchmark on MacBook Pro M2 with Apple Silicon architecture and 32 GB memory:
+Results of running the benchmark on MacBook Pro M2 Max with Apple Silicon architecture, 32 GB RAM and macOS 15.6.1:
 
 ```
 goos: darwin
 goarch: arm64
-pkg: reference-benchmark
+pkg: pointer-benchmark
 cpu: Apple M2 Max
-BenchmarkArrayStructs/Value_Size_1-12           82960102                14.17 ns/op
-BenchmarkArrayStructs/Pointer_Size_1-12         83931249                14.42 ns/op
-BenchmarkArrayStructs/Value_Size_10-12          78162956                15.81 ns/op
-BenchmarkArrayStructs/Pointer_Size_10-12        80116617                15.20 ns/op
-BenchmarkArrayStructs/Value_Size_100-12         44019870                28.37 ns/op
-BenchmarkArrayStructs/Pointer_Size_100-12       78062955                15.32 ns/op
-BenchmarkArrayStructs/Value_Size_1000-12         6975787               171.6 ns/op
-BenchmarkArrayStructs/Pointer_Size_1000-12      80187997                15.20 ns/op
-BenchmarkArrayStructs/Value_Size_10000-12         533920              2461 ns/op
-BenchmarkArrayStructs/Pointer_Size_10000-12     80357590                15.25 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_1_CallCount_1-12             565223559                1.975 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_1_CallCount_1-12           634912098                1.933 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_1_CallCount_4-12             12624357                95.15 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_1_CallCount_4-12            9231819               130.4 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_1_CallCount_16-12             2589217               464.0 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_1_CallCount_16-12           1904264               631.2 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_10_CallCount_1-12            404636686                2.964 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_10_CallCount_1-12          619423708                1.929 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_10_CallCount_4-12            10205169               117.8 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_10_CallCount_4-12           8836702               137.9 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_10_CallCount_16-12            2151208               561.7 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_10_CallCount_16-12          1837594               656.5 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_100_CallCount_1-12           74046078                16.36 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_100_CallCount_1-12         616755843                1.938 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_100_CallCount_4-12            5998818               200.5 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_100_CallCount_4-12          8686639               137.8 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_100_CallCount_16-12           1257742               941.6 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_100_CallCount_16-12         1816357               656.2 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_1000_CallCount_1-12           7425261               165.8 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_1000_CallCount_1-12        616188687                1.931 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_1000_CallCount_4-12            894459              1347 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_1000_CallCount_4-12         8678065               138.2 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_1000_CallCount_16-12           186594              6443 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_1000_CallCount_16-12        1815189               657.7 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_10000_CallCount_1-12           689126              1926 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_10000_CallCount_1-12       617173360                1.946 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_10000_CallCount_4-12           102614             11691 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_10000_CallCount_4-12        8414082               141.2 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_1_Array_Size_10000_CallCount_16-12           22706             51638 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_1_Array_Size_10000_CallCount_16-12       1785794               679.0 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_1_CallCount_1-12             607758544                1.963 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_1_CallCount_1-12           610443283                1.971 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_1_CallCount_4-12              5237826               229.0 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_1_CallCount_4-12            3046281               391.9 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_1_CallCount_16-12             1000000              1146 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_1_CallCount_16-12            615776              1947 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_10_CallCount_1-12            399028696                3.013 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_10_CallCount_1-12          607925062                1.962 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_10_CallCount_4-12             4277546               282.7 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_10_CallCount_4-12           2917479               407.3 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_10_CallCount_16-12             864236              1375 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_10_CallCount_16-12           592141              2020 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_100_CallCount_1-12           71710650                16.47 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_100_CallCount_1-12         612036852                1.961 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_100_CallCount_4-12            2553594               473.7 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_100_CallCount_4-12          2892517               409.3 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_100_CallCount_16-12            526552              2312 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_100_CallCount_16-12          576919              2032 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_1000_CallCount_1-12           7116028               168.2 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_1000_CallCount_1-12        605727660                1.964 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_1000_CallCount_4-12            386238              3088 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_1000_CallCount_4-12         2906076               409.6 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_1000_CallCount_16-12            78231             15312 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_1000_CallCount_16-12         590574              2020 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_10000_CallCount_1-12           664812              1843 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_10000_CallCount_1-12       603310666                1.960 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_10000_CallCount_4-12            45262             26991 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_10000_CallCount_4-12        2844615               419.8 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_4_Array_Size_10000_CallCount_16-12            8976            123888 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_4_Array_Size_10000_CallCount_16-12        553986              2082 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_1_CallCount_1-12            603416720                1.974 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_1_CallCount_1-12          612625704                1.961 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_1_CallCount_4-12             1576854               760.8 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_1_CallCount_4-12            861583              1366 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_1_CallCount_16-12             308746              3873 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_1_CallCount_16-12           174138              6801 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_10_CallCount_1-12           397621560                3.010 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_10_CallCount_1-12         610272540                1.966 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_10_CallCount_4-12            1386405               866.7 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_10_CallCount_4-12           840103              1444 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_10_CallCount_16-12            278023              4313 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_10_CallCount_16-12          167443              7149 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_100_CallCount_1-12          71732438                16.66 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_100_CallCount_1-12        607350200                2.015 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_100_CallCount_4-12            791652              1525 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_100_CallCount_4-12          816823              1422 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_100_CallCount_16-12           155864              7637 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_100_CallCount_16-12         167905              7097 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_1000_CallCount_1-12          7085354               167.2 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_1000_CallCount_1-12       610316509                1.972 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_1000_CallCount_4-12           106183             11141 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_1000_CallCount_4-12         815856              1440 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_1000_CallCount_16-12           21781             54271 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_1000_CallCount_16-12        166639              7183 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_10000_CallCount_1-12          735799              1737 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_10000_CallCount_1-12      610610632                1.973 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_10000_CallCount_4-12           14514             82892 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_10000_CallCount_4-12        718417              1583 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_1_Nested_Struct_Count_16_Array_Size_10000_CallCount_16-12           2865            415522 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_1_Nested_Struct_Count_16_Array_Size_10000_CallCount_16-12       144278              7992 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_1_CallCount_1-12             605835330                1.983 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_1_CallCount_1-12           607219843                1.973 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_1_CallCount_4-12              6481152               186.6 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_1_CallCount_4-12            4374732               273.9 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_1_CallCount_16-12              314950              3800 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_1_CallCount_16-12            230547              5202 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_10_CallCount_1-12            400017667                2.994 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_10_CallCount_1-12          604910612                1.964 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_10_CallCount_4-12             5027690               240.3 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_10_CallCount_4-12           4269049               277.3 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_10_CallCount_16-12             255745              4675 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_10_CallCount_16-12           218036              5367 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_100_CallCount_1-12           72460485                16.83 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_100_CallCount_1-12         613042737                1.962 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_100_CallCount_4-12            2811148               425.6 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_100_CallCount_4-12          4332337               276.0 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_100_CallCount_16-12            153171              7882 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_100_CallCount_16-12          222930              5352 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_1000_CallCount_1-12           6991297               166.6 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_1000_CallCount_1-12        608740755                1.961 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_1000_CallCount_4-12            375256              3127 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_1000_CallCount_4-12         4360892               276.3 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_1000_CallCount_16-12            22035             54686 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_1000_CallCount_16-12         222448              5351 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_10000_CallCount_1-12           688251              1810 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_10000_CallCount_1-12       607789068                1.966 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_10000_CallCount_4-12            43977             27158 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_10000_CallCount_4-12        4241122               283.6 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_1_Array_Size_10000_CallCount_16-12            2809            431370 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_1_Array_Size_10000_CallCount_16-12        217160              5470 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_1_CallCount_1-12             607375309                2.054 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_1_CallCount_1-12           607655575                2.018 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_1_CallCount_4-12              1000000              1167 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_1_CallCount_4-12             594651              2020 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_1_CallCount_16-12               35443             33575 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_1_CallCount_16-12             20917             57686 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_10_CallCount_1-12            398855062                2.988 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_10_CallCount_1-12          610821723                1.963 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_10_CallCount_4-12              809268              1447 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_10_CallCount_4-12            568662              2067 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_10_CallCount_16-12              29653             40740 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_10_CallCount_16-12            20419             59444 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_100_CallCount_1-12           72735537                16.56 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_100_CallCount_1-12         615562970                1.975 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_100_CallCount_4-12             485269              2463 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_100_CallCount_4-12           576565              2047 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_100_CallCount_16-12             17533             68573 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_100_CallCount_16-12           20265             59653 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_1000_CallCount_1-12           6717799               173.1 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_1000_CallCount_1-12        610073713                1.975 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_1000_CallCount_4-12             63116             19058 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_1000_CallCount_4-12          574690              2104 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_1000_CallCount_16-12             2653            455649 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_1000_CallCount_16-12          19945             59736 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_10000_CallCount_1-12           682878              1767 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_10000_CallCount_1-12       611371898                1.968 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_10000_CallCount_4-12             7767            145746 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_10000_CallCount_4-12         466419              2475 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_4_Array_Size_10000_CallCount_16-12             326           3625464 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_4_Array_Size_10000_CallCount_16-12         16609             69764 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_1_CallCount_1-12            604494795                1.962 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_1_CallCount_1-12          609951486                1.963 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_1_CallCount_4-12               92670             13042 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_1_CallCount_4-12             51366             23391 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_1_CallCount_16-12               2782            432240 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_1_CallCount_16-12             1519            811573 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_10_CallCount_1-12           391006842                3.052 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_10_CallCount_1-12         597032624                2.042 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_10_CallCount_4-12              79606             14920 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_10_CallCount_4-12            49084             24318 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_10_CallCount_16-12              2443            488581 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_10_CallCount_16-12            1490            806703 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_100_CallCount_1-12          71063558                16.62 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_100_CallCount_1-12        608813719                1.982 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_100_CallCount_4-12             42844             27737 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_100_CallCount_4-12           46964             24827 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_100_CallCount_16-12             1381            870713 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_100_CallCount_16-12           1472            823174 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_1000_CallCount_1-12          6995418               171.8 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_1000_CallCount_1-12       606334681                1.978 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_1000_CallCount_4-12             5955            199750 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_1000_CallCount_4-12          41928             27030 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_1000_CallCount_16-12             198           6032687 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_1000_CallCount_16-12          1306            913288 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_10000_CallCount_1-12          678403              1765 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_10000_CallCount_1-12      606257076                1.955 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_10000_CallCount_4-12             675           1728386 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_10000_CallCount_4-12         15114             78801 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_2_Nested_Struct_Count_16_Array_Size_10000_CallCount_16-12             22          54222231 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_2_Nested_Struct_Count_16_Array_Size_10000_CallCount_16-12          454           2575797 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_1_CallCount_1-12             605359574                1.970 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_1_CallCount_1-12           611791257                1.968 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_1_CallCount_4-12              5511289               218.3 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_1_CallCount_4-12            3854512               310.5 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_1_CallCount_16-12               65270             18049 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_1_CallCount_16-12             46570             25598 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_10_CallCount_1-12            404511936                2.978 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_10_CallCount_1-12          610974369                1.963 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_10_CallCount_4-12             4173656               287.6 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_10_CallCount_4-12           3796921               317.2 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_10_CallCount_16-12              52468             23591 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_10_CallCount_16-12            45321             26403 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_100_CallCount_1-12           71692617                16.75 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_100_CallCount_1-12         607501633                1.978 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_100_CallCount_4-12            2244759               532.8 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_100_CallCount_4-12          3774225               318.7 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_100_CallCount_16-12             30400             39246 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_100_CallCount_16-12           45398             26303 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_1000_CallCount_1-12           7154449               168.7 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_1000_CallCount_1-12        609439585                1.979 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_1000_CallCount_4-12            303394              4120 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_1000_CallCount_4-12         3768139               319.3 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_1000_CallCount_16-12             4323            279506 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_1000_CallCount_16-12          39253             26352 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_10000_CallCount_1-12           697969              1770 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_10000_CallCount_1-12       606848920                1.974 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_10000_CallCount_4-12            33176             36150 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_10000_CallCount_4-12        3729078               323.9 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_1_Array_Size_10000_CallCount_16-12             541           2180291 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_1_Array_Size_10000_CallCount_16-12         44019             27702 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_1_CallCount_1-12             606748305                1.980 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_1_CallCount_1-12           610517950                1.979 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_1_CallCount_4-12               488418              2455 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_1_CallCount_4-12             285104              4163 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_1_CallCount_16-12                2059            589529 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_1_CallCount_16-12              1174           1021386 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_10_CallCount_1-12            401641149                3.008 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_10_CallCount_1-12          608887473                1.978 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_10_CallCount_4-12              395110              3038 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_10_CallCount_4-12            275980              4287 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_10_CallCount_16-12               1639            730463 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_10_CallCount_16-12             1128           1055850 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_100_CallCount_1-12           71318548                16.54 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_100_CallCount_1-12         615693117                1.957 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_100_CallCount_4-12             212792              5587 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_100_CallCount_4-12           278746              4317 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_100_CallCount_16-12               980           1224039 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_100_CallCount_16-12            1124           1060170 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_1000_CallCount_1-12           7219050               168.1 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_1000_CallCount_1-12        608510910                1.978 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_1000_CallCount_4-12             25898             46037 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_1000_CallCount_4-12          254119              4548 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_1000_CallCount_16-12              144           8286870 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_1000_CallCount_16-12           1080           1108008 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_10000_CallCount_1-12           697201              1976 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_10000_CallCount_1-12       612623229                1.975 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_10000_CallCount_4-12             3181            373559 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_10000_CallCount_4-12         212644              6040 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_4_Array_Size_10000_CallCount_16-12              16          66140130 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_4_Array_Size_10000_CallCount_16-12           770           1422905 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_1_CallCount_1-12            605971212                1.987 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_1_CallCount_1-12          605116894                1.971 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_1_CallCount_4-12               15146             79112 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_1_CallCount_4-12              8151            143534 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_1_CallCount_16-12                 38          30078422 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_1_CallCount_16-12               20          55321400 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_10_CallCount_1-12           401136328                3.013 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_10_CallCount_1-12         604680096                1.968 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_10_CallCount_4-12              12955             92035 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_10_CallCount_4-12             8020            152147 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_10_CallCount_16-12                33          36741035 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_10_CallCount_16-12              20          57104100 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_100_CallCount_1-12          74795676                16.33 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_100_CallCount_1-12        591072100                2.004 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_100_CallCount_4-12              6493            184377 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_100_CallCount_4-12            6308            184488 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_100_CallCount_16-12               19          61694263 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_100_CallCount_16-12             19          61305524 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_1000_CallCount_1-12          6580806               179.5 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_1000_CallCount_1-12       556157950                1.975 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_1000_CallCount_4-12              745           1533539 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_1000_CallCount_4-12           2316            530478 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_1000_CallCount_16-12               3         433591570 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_1000_CallCount_16-12             8         138720146 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_10000_CallCount_1-12          659269              1785 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_10000_CallCount_1-12      602282018                2.060 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_10000_CallCount_4-12             104          11703871 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_10000_CallCount_4-12          2360            529283 ns/op
+BenchmarkArrayStructs/ByValue-Recursion_3_Nested_Struct_Count_16_Array_Size_10000_CallCount_16-12              1        3866399375 ns/op
+BenchmarkArrayStructs/ByPointer-Recursion_3_Nested_Struct_Count_16_Array_Size_10000_CallCount_16-12            5         215812067 ns/op
 PASS
-ok      reference-benchmark     13.521
+ok      pointer-benchmark       386.827s
 ```
